@@ -12,10 +12,55 @@
 <p align="center">
   <a href="#-english">English</a> ·
   <a href="#-中文">中文</a> ·
+  <a href="#-inspiration">📄 Inspiration</a> ·
   <a href="#-quick-start">Quick Start</a> ·
   <a href="#-how-it-works">How It Works</a> ·
   <a href="#-usage">Usage</a> ·
   <a href="#-deep-mode-probability-analysis">Deep Mode</a>
+</p>
+
+---
+
+## 📄 Inspiration · 灵感来源
+
+> **This skill was fundamentally re-architected after studying one paper.**
+> **这个技能的底层逻辑，来自一篇论文的启发。**
+
+<p align="center">
+  <a href="https://arxiv.org/abs/2606.02158">
+    <img src="https://img.shields.io/badge/arXiv-2606.02158v1-b31b1b?style=for-the-badge&logo=arxiv" alt="arXiv">
+  </a>
+  <img src="https://img.shields.io/badge/Venue-ICML_2025-blue?style=for-the-badge" alt="ICML 2025">
+  <img src="https://img.shields.io/badge/PMLR-306-purple?style=for-the-badge" alt="PMLR 306">
+</p>
+
+<h3 align="center">
+  <em>On the Salience of Low-Probability Tokens for AI-Generated Text Detection:<br>A Multiscale Uncertainty Perspective</em>
+</h3>
+<p align="center">
+  Guo, Wang, Fan, Ke & Luo (2025) · ICML 2025, Seoul
+</p>
+
+**Three findings from this paper rewired how Humanizer works:**
+
+| Paper Finding | What It Means | How Humanizer Uses It |
+|:--------------|:--------------|:----------------------|
+| **① Bottom ~15% tokens carry 3.5× more discriminative signal** (Assumption 3.1) | Detectors look at the statistically unlikely words — specific numbers, proper names, technical terms. High-probability "boilerplate" like *"additionally"*, *"crucial"*, *"furthermore"* is useless for detection (Human-AI LogRank gap: 0.45 vs 1.59). | **P44–P47 patterns** + **Tail Token Smuggling** strategy: identify and inject surprising, domain-specific tokens at the exact positions detectors are watching. |
+| **② Rényi entropy barely changes under surface rewrites** (Proposition 3.4) | Synonym swaps and sentence reordering don't fool entropy-based detectors (like Uncertainty++). The distribution *shape* stays the same. You must add genuine information, not just rephrase. | **Deep mode** verifies entropy change post-rewrite using `token_analyzer.py`. If unchanged → triggers structural rewrite (add facts, not just new words). |
+| **③ Low-probability focus improves ALL detectors** (RQ5, Fig 6) | Applying low-probability filtering to a basic Likelihood detector boosted AUROC from 48% → 83% (+24.53). The effect is **method-agnostic** — every detector benefits from focusing on the tail. | Scoring formula gives **65% weight** to probability-derived terms (AI likelihood, low-prob ratio, Rényi entropy) matching the paper's ablation results. |
+
+<br>
+
+> **论文的三个核心发现，重塑了 Humanizer 的底层架构：**
+>
+> **① 底部约 15% 的低概率 token 携带 3.5 倍的判别信号**（假设 3.1）——检测器盯的是统计上"意外"的词：具体数字、专有名词、技术术语。高概率套话（"additionally"、"crucial"）反而没用。→ Humanizer 新增 **P44–P47 概率驱动模式**和**尾 Token 走私策略**。
+>
+> **② 表面改写几乎不改变 Rényi 熵分布形状**（命题 3.4）——换同义词、调语序骗不过基于熵的检测器。必须加入真正的信息，而非仅改写措辞。→ Humanizer 的 **Deep mode** 会在改写后验证熵变化，不变则触发结构级重写。
+>
+> **③ 聚焦低概率 token 能提升所有检测器**（RQ5，图 6）——把低概率过滤套到一个基础 Likelihood 检测器上，AUROC 从 48% 飙升到 83%（+24.53）。效果是**方法无关的**。→ Humanizer 评分公式中 **65% 权重**分配给概率衍生项。
+
+<p align="center">
+  <sub>📖 <a href="https://arxiv.org/abs/2606.02158">Full paper on arXiv</a> · <a href="https://github.com/guoyikai2000/Uncertainty-AIGT">Official code</a> · <a href="https://github.com/Aaron-Bushnell/humanizer/blob/master/references/tail-token-smuggling.md">Our implementation notes</a></sub>
 </p>
 
 ---
