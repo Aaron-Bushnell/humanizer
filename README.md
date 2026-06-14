@@ -141,7 +141,7 @@ npm install -g @anthropic-ai/claude-code
 
 ```bash
 # Clone into your Claude skills directory
-git clone https://github.com/YOUR_USERNAME/humanizer.git ~/.claude/skills/humanizer
+git clone https://github.com/Aaron-Bushnell/humanizer.git ~/.claude/skills/humanizer
 ```
 
 Or manually copy the `humanizer/` folder into `~/.claude/skills/`.
